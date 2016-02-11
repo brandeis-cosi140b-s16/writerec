@@ -1,4 +1,4 @@
 Goals:
 1. to acquire plot summaries of uniform size and format for one genre
-2. to identify entities as well as the events, properties, and relationships that affect the entities  and show the interactions between the entities
+2. to identify entities as well as the events, properties, and relationships that affect the entities and show the interactions between the entities
 3. to recommend books based on similarities in plots, characters, and character development
