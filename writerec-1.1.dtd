@@ -3,7 +3,7 @@
 <!ELEMENT Protagonist ( #PCDATA ) >
 <!ATTLIST Protagonist id ID prefix="protag" #REQUIRED >
 <!ATTLIST Protagonist subtype ( underdoghero | antihero | otherhero | traitor | sidekick | mentor | other) #REQUIRED >
-<!ATTLIST Protagonist number( group | individual ) #REQUIRED “individual” >
+<!ATTLIST Protagonist number ( group | individual ) #REQUIRED “individual” >
 
 <!ELEMENT Antagonist ( #PCDATA ) >
 <!ATTLIST Antagonist id ID prefix="antag" #REQUIRED >
