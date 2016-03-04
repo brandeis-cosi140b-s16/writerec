@@ -1,0 +1,25 @@
+<!ENTITY name “WriteRec”>
+
+<!ELEMENT Protagonist ( #PCDATA ) >
+<!ATTLIST Protagonist id ID prefix="protag" #REQUIRED >
+<!ATTLIST Protagonist subtype ( underdoghero | antihero | otherhero | traitor | sidekick | mentor | other) #REQUIRED >
+<!ATTLIST Protagonist number( group | nongroup ) #REQUIRED “nongroup”>
+
+<!ELEMENT Antagonist ( #PCDATA ) >
+<!ATTLIST Antagonist id ID prefix="antag" #REQUIRED >
+<!ATTLIST Antagonist subtype (mainbadguy | bossbadguy | traitor | underling | other #REQUIRED >
+<!ATTLIST Antagonist number ( group | nongroup ) #REQUIRED “nongroup” >
+
+<!ELEMENT Other ( #PCDATA ) >
+<!ATTLIST Other id ID prefix="othr" #REQUIRED >
+
+<!ELEMENT Object ( #PCDATA ) >
+<!ATTLIST Object id ID prefix=”object” #REQUIRED >
+
+<!ELEMENT Links EMPTY >
+<!ATTLIST Links benefits (to | from | both | neither | unknown) #REQUIRED >
+<!ATTLIST Links harms (to | from | both | neither | unknown) #REQUIRED >
+<!ATTLIST Links trigger IDREF #REQUIRED >
+
+<!ELEMENT Trigger ( #PCDATA )>
+<!ATTLIST Trigger subtype ( romantic | other) #REQUIRED >
