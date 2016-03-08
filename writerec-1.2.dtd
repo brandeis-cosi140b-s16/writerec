@@ -1,12 +1,12 @@
 <!ENTITY name "WriteRec">
 
 <!ELEMENT Protagonist ( #PCDATA ) >
-<!ATTLIST Protagonist id ID prefix="protag" #REQUIRED >
+<!ATTLIST Protagonist id ID prefix="pro" #REQUIRED >
 <!ATTLIST Protagonist subtype ( underdoghero | antihero | otherhero | traitor | sidekick | mentor | other) #REQUIRED >
 <!ATTLIST Protagonist number ( group | individual ) #REQUIRED “individual” >
 
 <!ELEMENT Antagonist ( #PCDATA ) >
-<!ATTLIST Antagonist id ID prefix="antag" #REQUIRED >
+<!ATTLIST Antagonist id ID prefix="ant" #REQUIRED >
 <!ATTLIST Antagonist subtype (mainbadguy | bossbadguy | traitor | underling | other) #REQUIRED >
 <!ATTLIST Antagonist number ( group | individual ) #REQUIRED “individual” >
 
@@ -15,7 +15,7 @@
 <!ATTLIST Other number ( group | individual ) #REQUIRED “individual” >
 
 <!ELEMENT Object ( #PCDATA ) >
-<!ATTLIST Object id ID prefix=”object” #REQUIRED >
+<!ATTLIST Object id ID prefix=”obj” #REQUIRED >
 <!ATTLIST Object number ( group | individual ) #REQUIRED “individual” >
 
 <!ELEMENT Relations EMPTY >
