@@ -26,6 +26,6 @@
 <!ATTLIST Relations harms (to | from | both | neither | unknown) #REQUIRED >
 
 <!ELEMENT Trigger ( #PCDATA )>
-<!ATTLIST Trigger type (romantic | other) #REQUIRED "other" >
+<!ATTLIST Trigger type (romantic | conflict | other) #REQUIRED "other" >
 
 
