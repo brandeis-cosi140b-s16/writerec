@@ -1,0 +1,32 @@
+<!ENTITY name "WriteRec">
+
+<!ELEMENT Protagonist ( #PCDATA ) >
+<!ATTLIST Protagonist id ID prefix="p" #REQUIRED >
+<!ATTLIST Protagonist subtype ( underdoghero | antihero | otherhero | traitor | sidekick | mentor | other)  #REQUIRED >
+<!ATTLIST Protagonist number ( group | individual ) #REQUIRED “individual” >
+
+<!ELEMENT Antagonist ( #PCDATA ) >
+<!ATTLIST Antagonist id ID prefix="a" #REQUIRED >
+<!ATTLIST Antagonist subtype (mainbadguy | bossbadguy | traitor | underling | other) #REQUIRED >
+<!ATTLIST Antagonist number ( group | individual ) #REQUIRED “individual” >
+
+<!ELEMENT Unkown (#PCDATA) >
+<!ELEMENT Other ( #PCDATA ) >
+<!ATTLIST Other id ID prefix="otr" #REQUIRED >
+<!ATTLIST Other number ( group | individual ) #REQUIRED “individual” >
+
+<!ELEMENT Object ( #PCDATA ) >
+<!ATTLIST Object id ID prefix=”o” #REQUIRED >
+<!ATTLIST Object number ( group | individual ) #REQUIRED “individual” >
+
+<!ELEMENT Relations EMPTY >
+<!ATTLIST Relations arg0 IDREF prefix="from" #REQUIRED >
+<!ATTLIST Relations arg1 IDREF prefix="to" #REQUIRED >
+<!ATTLIST Relations arg2 IDREF prefix="trigger" #REQUIRED >
+<!ATTLIST Relations benefits (to | from | both | neither | unknown) #REQUIRED >
+<!ATTLIST Relations harms (to | from | both | neither | unknown) #REQUIRED >
+
+<!ELEMENT Trigger ( #PCDATA )>
+<!ATTLIST Trigger subtype ( romantic | familial | conflict | other) #REQUIRED >
+
+
