@@ -1,0 +1,7 @@
+Since our last progress update, the WriteRec team has completed the following tasks:
+
+- A new package of 50 documents has been collected for annotation.
+- The specification has been adjusted according to annotator feedback to include an additional class of entities specifically for those with insufficient information to group them as a protagonist/antagonist/other.  Relation triggers have been adjusted to account for more types as well.
+- The .dtd has been updated according to the above.
+- The guidelines have been clarified to account for difficulties reported by the annotators, as well as for unreported issues.  Instructions have also been clarified and standardized for tagging spans.  Examples have been separated from data to be annotated.
+- The new package has been sent out to annotators along with the updated .dtd, guidelines, and a summary of changes.
