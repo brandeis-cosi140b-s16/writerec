@@ -1,0 +1,11 @@
+Since our last progress update, the WriteRec team has completed the following tasks:
+
+- A new package of 50 documents has been collected for annotation.
+- The specification has been adjusted according to annotator feedback to include an additional class of relation triggers specifically for those involving leadership roles.
+- The .dtd has been updated according to the above.
+- The guidelines being released in the third package are being corrected to fix example cases that are mislabeled (specifically, to account for appositive phrase extent tagging). 
+- Our annotations for week 1 have been completed or are in progress to be completed before the next release.
+- Plans for evaluation and testing have begun; we will use TF-IDF rankings to assess document groupings intrinsically, and prepare a form to collect ratings of the summaries in our corpus for similarity clustering purposes to assess our recommendations extrinsically.
+
+
+
