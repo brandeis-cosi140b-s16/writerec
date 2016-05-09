@@ -82,21 +82,21 @@ The current implementation counts relationships that are:
 2   caused by antagonists, 
 3   -   benefitting selves, 
 4   -   benefitting others, ...
-5   -   benefitting none or unknown, ...
+5   -   benefitting none or unable to assess, ...
 6   -   harming selves;
 7   -   harming others;
-8   -   harming none or unknown;
+8   -   harming none or unable to assess;
 9   caused by protagonists, ...
 16  caused by others and unknowns, ...
 23  caused by objects,
 24  -   benefitting antagonists;
 25  -   benefitting protagonists;
 26  -   benefitting other character types;
-27  -   benefitting none or benefits not known;
+27  -   benefitting none or unable to assess;
 28  -   harming antagonists;
 29  -   harming protagonists;
 30  -   harming other character types;
-31  -   harming none or benefits not known.
+31  -   harming none or unable to assess.
 
 This set of counts will generate a less sparse vector with more local information
 through overlap and double-counting, for example in a mutually beneficial 
@@ -159,8 +159,8 @@ DIMS = [# antagonist counts
         ('R','?','bs',),('R','?','bo',),('R','?','bn',),
         ('R','?','hs',),('R','?','ho',),('R','?','hn',),
         ('R','o',),
-        ('R','o','ba',),('R','o','bp',),('R','o','bo',),('R','o','b?',),
-        ('R','o','ha',),('R','o','hp',),('R','o','ho',),('R','o','h?',),
+        ('R','o','ba',),('R','o','bp',),('R','o','b?',),('R','o','bn',),
+        ('R','o','ha',),('R','o','hp',),('R','o','h?',),('R','o','hn',),
         ]
 
 
@@ -228,51 +228,79 @@ def extract(path):
                 
             elif tag == 'R':
                 agent = t.get('fromID').strip('1234567890') 
-                if (agent == 'a') | (agent == 'p'):
+                ben = t.get('benefits')
+                mal = t.get('harms')
+                if (agent == 'a') or (agent == 'p'):
                     counts.update([(tag,agent,)])  # update agent counts
-                    # update agent+benefittee and agent+harmee counts
-                elif (agent == 'U') | (agent == 'otr'):
+                    # update agent+benefittee
+                    if (ben == 'from') or (ben == 'both'):
+                        counts.update([(tag,agent,'bs',)])
+                    if (ben == 'to') or (ben == 'both'):
+                        counts.update([(tag,agent,'bo',)])
+                    if (ben == 'neither') or (ben == 'unknown'):
+                        counts.update([(tag,agent,'bn',)])
+                    # update agent+harmee 
+                    if (mal == 'from') or (mal == 'both'):
+                        counts.update([(tag,agent,'hs',)])
+                    if (mal == 'to') or (mal == 'both'):
+                        counts.update([(tag,agent,'ho',)])
+                    if (mal == 'neither') or (mal == 'unknown'):
+                        counts.update([(tag,agent,'hn',)])
+                    
+                elif (agent == 'U') or (agent == 'otr'):
                     counts.update([(tag,'?',)])  # update agent counts
-                    # update agent+benefittee and agent+harmee counts
+                    # update agent+benefittee
+                    if (ben == 'from') or (ben == 'both'):
+                        counts.update([(tag,agent,'bs',)])
+                    if (ben == 'to') or (ben == 'both'):
+                        counts.update([(tag,agent,'bo',)])
+                    if (ben == 'neither') or (ben == 'unknown'):
+                        counts.update([(tag,agent,'bn',)])
+                    # update agent+harmee 
+                    if (mal == 'from') or (mal == 'both'):
+                        counts.update([(tag,agent,'hs',)])
+                    if (mal == 'to') or (mal == 'both'):
+                        counts.update([(tag,agent,'ho',)])
+                    if (mal == 'neither') or (mal == 'unknown'):
+                        counts.update([(tag,agent,'hn',)])
+                        
                 elif (agent == 'o'):
                     counts.update([(tag,agent,)])  # update agent counts
-                    # update object+benefittee and object+harmee counts
-                
-                
-                
-                #TODO this
-                '''
-                caused by antagonists, 
-                3   -   benefitting selves, 
-                4   -   benefitting others, ...
-                5   -   benefitting none or unknown, ...
-                6   -   harming selves;
-                7   -   harming others;
-                8   -   harming none or unknown;
-                caused by protagonists, ...
-                caused by others and unknowns, ...
-                caused by objects,
-                24  -   benefitting antagonists;
-                25  -   benefitting protagonists;
-                26  -   benefitting other character types;
-                27  -   benefitting none or benefits not known;
-                28  -   harming antagonists;
-                29  -   harming protagonists;
-                30  -   harming other character types;
-                31  -   harming none or benefits not known.
-                '''
-                
+                    # update with benefittees
+                    if (ben == 'to') or (ben == 'both'):
+                        ben_type = t.get('toID').strip('1234567890')
+                        if (ben_type == 'a') or (ben_type == 'p'):
+                            counts.update([(tag,agent,'b'+ben_type,)]) # caused by object, helped protagonist or antagonist
+                        elif (ben_type == 'otr') or (ben_type == 'U'):
+                            counts.update([(tag,agent,'b?',)]) # caused by object, helped someone else
+                    elif (ben == 'neither') or (ben == 'unknown'):
+                        counts.update([(tag,agent,'bn',)]) # caused by object, helped none/unknown
+                    # update with harmees  
+                    if (mal == 'to') or (mal == 'both'):
+                        mal_type = t.get('toID').strip('1234567890')
+                        if (mal_type == 'a') or (mal_type == 'p'): 
+                            counts.update([(tag,agent,'h'+mal_type,)]) # caused by object, harmed protagonist or antagonist
+                        elif (mal_type == 'otr') or (mal_type == 'U'):
+                            counts.update([(tag,agent,'h?,')]) # caused by object, harmed someone else
+                    elif (mal == 'neither') or (mal == 'unknown'):
+                        counts.update([(tag,agent,'hn',)]) # caused by object, harmed none/unknown
+                    # we don't care about benefits/harms 'from'.
             else:
                 print ('Something is rotten in the state of Denmark')
-        
-    vector = numpy.zeros(len(DIMS)) # set up the output vector
-    #TODO do this 
-    for dim in range(len(counts)): # update vector with counts
-        pass
     
+    # set up the output vector
+    vector = [] 
+    for dim in sorted(counts.keys()): # ensure order of dimensions is always identical!
+        vector.append(counts[dim]) # update vector with counts
     return vector
             
 
+# run extraction
+PATH = '/media/clay/SHARED/acad/brandeis/2015_2016-spring/NLAML/writerec_corpus/annotations/gold_standard/'
+for f in sorted(os.listdir(PATH)):
+    if f[-4:].lower() == '.xml':
+        v = extract(os.path.join(PATH,f))
+        print (f, v)
 
 
 '''#TODO remove quotes
