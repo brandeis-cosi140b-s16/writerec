@@ -8,47 +8,35 @@ A script for embedding local features of an attributed graph into vector space,
 following J. G. Domingo 2012, "Vector Space Embedding of Graphs via Statistics 
 of Labelling Information."
 
-Special thanks to Noa Naaman for guidance.
+Special thanks to Noa Naaman and Keigh Rim for guidance.
 
 
-Our DTD specifies the following possible tags and their attributes:
+Our DTD specifies the following possible tags and relevant attributes:
 
 + Protagonist
 --- id (prefix="p")
 --- subtype (underdoghero | antihero | otherhero | traitor | sidekick | mentor | other)
---- number (group | individual) 
---- spans ("###~###")
---- text 
+--- number (group | individual)
 + Antagonist
 --- id (prefix="a")
 --- subtype (mainbadguy | bossbadguy | traitor | underling | other)
 --- number (group | individual)
---- spans ("###~###")
---- text 
 + Unkown [sic]
 --- id (prefix="U")
---- spans ("###~###")
---- text 
 + Other
 --- id (prefix="otr")
 --- number (group | individual)
---- spans ("###~###")
---- text 
 + Object
 --- id (prefix="o")
 --- number (group | individual)
---- spans ("###~###")
---- text 
 + Trigger
 --- id (prefix="T")
 --- subtype (romantic | familial | leadership | conflict | other)
---- spans ("###~###")
---- text 
 + Relations
 --- id (prefix="R")
---- toID, toText
---- fromID, fromText
---- triggerID, triggerText
+--- toID
+--- fromID
+--- triggerID
 --- benefits (to | from | both | neither | unknown)
 --- harms (to | from | both | neither | unknown)
 
@@ -56,7 +44,7 @@ Our DTD specifies the following possible tags and their attributes:
 
 
 # modules needed:
-import os, sys
+import os, sys, numpy
 from xml.etree.ElementTree import ElementTree
 from collections import Counter
 
@@ -301,6 +289,25 @@ for f in sorted(os.listdir(PATH)):
     if f[-4:].lower() == '.xml':
         v = extract(os.path.join(PATH,f))
         print (f, v)
+
+
+'''
+Next, we will build 2 clusters using k-means algorithm based on cosine similarity between these vectors. Note that the k-means algorithm starts with random seeds and does not guarantee the global convergence. Thus, one might want to repeat the algorithm then take the most common result as a 'good enough' clustering (by using repeats parameter).
+In [19]:
+dist = nltk.cluster.cosine_distance
+kmc = nltk.cluster.kmeans.KMeansClusterer(2, dist, repeats=10)
+
+clustered = kmc.cluster(feature_vectors, True)
+print(clustered)
+
+gold_labels = [int(label=='M') for _, label in raw_data[:10]]
+print(gold_labels)
+[0, 1, 1, 0, 1, 0, 1, 1, 0, 1]
+[1, 1, 1, 1, 0, 1, 0, 1, 0, 0]
+After trained, the clustering can be used a sort-of classifier, like such:
+In [20]:
+kmc.classify(numpy.array(generate_document_vector(raw_data[111][0])))
+'''
 
 
 '''#TODO remove quotes
