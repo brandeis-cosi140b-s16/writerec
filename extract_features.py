@@ -215,6 +215,7 @@ def extract(path):
                 counts.update([(tag,sub,)])
                 
             elif tag == 'R':
+                
                 agent = t.get('fromID').strip('1234567890') 
                 ben = t.get('benefits')
                 mal = t.get('harms')
@@ -239,18 +240,18 @@ def extract(path):
                     counts.update([(tag,'?',)])  # update agent counts
                     # update agent+benefittee
                     if (ben == 'from') or (ben == 'both'):
-                        counts.update([(tag,agent,'bs',)])
+                        counts.update([(tag,'?','bs',)])
                     if (ben == 'to') or (ben == 'both'):
-                        counts.update([(tag,agent,'bo',)])
+                        counts.update([(tag,'?','bo',)])
                     if (ben == 'neither') or (ben == 'unknown'):
-                        counts.update([(tag,agent,'bn',)])
+                        counts.update([(tag,'?','bn',)])
                     # update agent+harmee 
                     if (mal == 'from') or (mal == 'both'):
-                        counts.update([(tag,agent,'hs',)])
+                        counts.update([(tag,'?','hs',)])
                     if (mal == 'to') or (mal == 'both'):
-                        counts.update([(tag,agent,'ho',)])
+                        counts.update([(tag,'?','ho',)])
                     if (mal == 'neither') or (mal == 'unknown'):
-                        counts.update([(tag,agent,'hn',)])
+                        counts.update([(tag,'?','hn',)])
                         
                 elif (agent == 'o'):
                     counts.update([(tag,agent,)])  # update agent counts
@@ -269,10 +270,11 @@ def extract(path):
                         if (mal_type == 'a') or (mal_type == 'p'): 
                             counts.update([(tag,agent,'h'+mal_type,)]) # caused by object, harmed protagonist or antagonist
                         elif (mal_type == 'otr') or (mal_type == 'U'):
-                            counts.update([(tag,agent,'h?,')]) # caused by object, harmed someone else
+                            counts.update([(tag,agent,'h?',)]) # caused by object, harmed someone else
                     elif (mal == 'neither') or (mal == 'unknown'):
                         counts.update([(tag,agent,'hn',)]) # caused by object, harmed none/unknown
                     # we don't care about benefits/harms 'from'.
+                
             else:
                 print ('Something is rotten in the state of Denmark')
     
@@ -280,33 +282,42 @@ def extract(path):
     vector = [] 
     for dim in sorted(counts.keys()): # ensure order of dimensions is always identical!
         vector.append(counts[dim]) # update vector with counts
+    #print(sorted(counts.keys()))
     return vector
             
 
 # run extraction
+VECTORS = [] # a |document| x |features| matrix
 PATH = '/media/clay/SHARED/acad/brandeis/2015_2016-spring/NLAML/writerec_corpus/annotations/gold_standard/'
 for f in sorted(os.listdir(PATH)):
     if f[-4:].lower() == '.xml':
-        v = extract(os.path.join(PATH,f))
-        print (f, v)
-
+        v,_ = extract(os.path.join(PATH,f))
+        if len(v) == 62:
+            VECTORS.append(v)
+            print('fine')
+        else:
+            print('\nsomething bad happened')
+            print(len(v))
+            print(f)
+            
 
 '''
-Next, we will build 2 clusters using k-means algorithm based on cosine similarity between these vectors. Note that the k-means algorithm starts with random seeds and does not guarantee the global convergence. Thus, one might want to repeat the algorithm then take the most common result as a 'good enough' clustering (by using repeats parameter).
-In [19]:
-dist = nltk.cluster.cosine_distance
-kmc = nltk.cluster.kmeans.KMeansClusterer(2, dist, repeats=10)
-
-clustered = kmc.cluster(feature_vectors, True)
-print(clustered)
-
-gold_labels = [int(label=='M') for _, label in raw_data[:10]]
-print(gold_labels)
-[0, 1, 1, 0, 1, 0, 1, 1, 0, 1]
-[1, 1, 1, 1, 0, 1, 0, 1, 0, 0]
-After trained, the clustering can be used a sort-of classifier, like such:
-In [20]:
-kmc.classify(numpy.array(generate_document_vector(raw_data[111][0])))
+# clusterer
+#
+# number of clusters
+k = 5
+# number of times to repeat the algorithm; 
+# the most common assignment per document out of this number of runs is kept
+tries = 20
+# creates the clustering architecture
+kmc = nltk.cluster.kmeans.KMeansClusterer(k, nltk.cluster.cosine_distance, repeats=tries)
+# assigns each document to one of k clusters
+clustered = kmc.cluster(VECTORS,True)
+'''
+'''
+# pseudo-classifier:
+classify_this = '/media/clay/SHARED/acad/brandeis/2015_2016-spring/NLAML/writerec_corpus/annotations/gold_standard/American_Gods-goldstandard.xml'
+kmc.classify(numpy.array(extract(classify_this)))
 '''
 
 
