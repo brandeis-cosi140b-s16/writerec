@@ -43,6 +43,8 @@ for f in sorted(os.listdir(PATH)):
         v = bow_vector_binarized(os.path.join(PATH,f))
         feature_vectors.append(v)
 
+#print(feature_vectors)
+
 # clusterer
 #
 # number of clusters

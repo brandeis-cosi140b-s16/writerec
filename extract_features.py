@@ -44,7 +44,7 @@ Our DTD specifies the following possible tags and relevant attributes:
 
 
 # modules needed:
-import os, sys, numpy
+import os, sys, numpy, nltk
 from xml.etree.ElementTree import ElementTree
 from collections import Counter
 
@@ -279,9 +279,9 @@ def extract(path):
                 print ('Something is rotten in the state of Denmark')
     
     # set up the output vector
-    vector = [] 
+    vector = numpy.zeros(len(DIMS))
     for dim in sorted(counts.keys()): # ensure order of dimensions is always identical!
-        vector.append(counts[dim]) # update vector with counts
+        vector[sorted(DIMS).index(dim)] = counts[dim] # update vector with counts
     #print(sorted(counts.keys()))
     return vector
             
@@ -291,7 +291,7 @@ VECTORS = [] # a |document| x |features| matrix
 PATH = '/media/clay/SHARED/acad/brandeis/2015_2016-spring/NLAML/writerec_corpus/annotations/gold_standard/'
 for f in sorted(os.listdir(PATH)):
     if f[-4:].lower() == '.xml':
-        v,_ = extract(os.path.join(PATH,f))
+        v = extract(os.path.join(PATH,f))
         if len(v) == 62:
             VECTORS.append(v)
             print('fine')
@@ -300,20 +300,26 @@ for f in sorted(os.listdir(PATH)):
             print(len(v))
             print(f)
             
+#print(VECTORS)
 
-'''
 # clusterer
 #
 # number of clusters
 k = 5
 # number of times to repeat the algorithm; 
 # the most common assignment per document out of this number of runs is kept
-tries = 20
+tries = 3 # the higher this value, the more likely there is an assertion error if avoid_empty_clusters=False
 # creates the clustering architecture
-kmc = nltk.cluster.kmeans.KMeansClusterer(k, nltk.cluster.cosine_distance, repeats=tries)
+kmc = nltk.cluster.kmeans.KMeansClusterer(k, nltk.cluster.cosine_distance,avoid_empty_clusters=True,repeats=tries)
 # assigns each document to one of k clusters
 clustered = kmc.cluster(VECTORS,True)
-'''
+
+
+docs = []
+for f in os.listdir(PATH):
+    docs.append(f)
+
+
 '''
 # pseudo-classifier:
 classify_this = '/media/clay/SHARED/acad/brandeis/2015_2016-spring/NLAML/writerec_corpus/annotations/gold_standard/American_Gods-goldstandard.xml'
