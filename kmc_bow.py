@@ -4,7 +4,7 @@ Created on Mon May  9 19:09:49 2016
 
 @author: Clay Riley
 
-A script for creating a k-Means Clusterer using unary word featuresin a document.
+A script for creating a k-Means Clusterer using unary word features in a document.
 
 Special thanks to Keigh Rim for guidance.
 
@@ -43,6 +43,7 @@ for f in sorted(os.listdir(PATH)):
         v = bow_vector_binarized(os.path.join(PATH,f))
         feature_vectors.append(v)
 
+
 #print(feature_vectors)
 
 # clusterer
@@ -51,7 +52,7 @@ for f in sorted(os.listdir(PATH)):
 k = 5
 # number of times to repeat the algorithm; 
 # the most common assignment per document out of this number of runs is kept
-tries = 20
+tries = 1
 # creates the clustering architecture
 kmc = nltk.cluster.kmeans.KMeansClusterer(k, nltk.cluster.cosine_distance, repeats=tries)
 # assigns each document to one of k clusters

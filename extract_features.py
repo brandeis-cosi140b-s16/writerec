@@ -287,14 +287,17 @@ def extract(path):
             
 
 # run extraction
+i=0
 VECTORS = [] # a |document| x |features| matrix
 PATH = '/media/clay/SHARED/acad/brandeis/2015_2016-spring/NLAML/writerec_corpus/annotations/gold_standard/'
 for f in sorted(os.listdir(PATH)):
     if f[-4:].lower() == '.xml':
+        print(f)
         v = extract(os.path.join(PATH,f))
+        i+=1
         if len(v) == 62:
             VECTORS.append(v)
-            print('fine')
+            print(i, 'fine')
         else:
             print('\nsomething bad happened')
             print(len(v))
@@ -308,10 +311,11 @@ for f in sorted(os.listdir(PATH)):
 k = 5
 # number of times to repeat the algorithm; 
 # the most common assignment per document out of this number of runs is kept
-tries = 3 # the higher this value, the more likely there is an assertion error if avoid_empty_clusters=False
+tries = 9 # the higher this value, the more likely there is an assertion error if avoid_empty_clusters=False
 # creates the clustering architecture
 kmc = nltk.cluster.kmeans.KMeansClusterer(k, nltk.cluster.cosine_distance,avoid_empty_clusters=True,repeats=tries)
 # assigns each document to one of k clusters
+print ('clustering...')
 clustered = kmc.cluster(VECTORS,True)
 
 
